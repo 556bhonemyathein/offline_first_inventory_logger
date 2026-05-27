@@ -303,6 +303,8 @@ class HomeScreen extends ConsumerWidget {
 
     String? selectedSupplier;
 
+    bool hasNetworkError = false;
+
     showModalBottomSheet(
       context: context,
 
@@ -387,6 +389,8 @@ class HomeScreen extends ConsumerWidget {
                       /// SUPPLIER
                       suppliersAsync.when(
                         data: (suppliers) {
+                          hasNetworkError = false;
+
                           final supplierList = suppliers as List<SupplierModel>;
 
                           return DropdownButtonFormField<String>(
@@ -397,7 +401,6 @@ class HomeScreen extends ConsumerWidget {
                             ) {
                               return DropdownMenuItem(
                                 value: supplier.name,
-
                                 child: Text(supplier.name),
                               );
                             }).toList(),
@@ -428,27 +431,119 @@ class HomeScreen extends ConsumerWidget {
                           );
                         },
 
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
+                        loading: () => const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
 
                         error: (e, _) {
-                          return Column(
-                            children: [
-                              const Icon(
-                                Icons.wifi_off,
-                                size: 60,
-                                color: Colors.red,
-                              ),
+                          hasNetworkError = true;
 
-                              const SizedBox(height: 10),
+                          return Container(
+                            width: double.infinity,
 
-                              const Text("Network Error"),
+                            padding: const EdgeInsets.all(20),
 
-                              Text(
-                                e.toString(),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+
+                              borderRadius: BorderRadius.circular(20),
+
+                              border: Border.all(color: Colors.red.shade200),
+                            ),
+
+                            child: Column(
+                              children: [
+                                const Icon(
+                                  Icons.wifi_off,
+                                  size: 70,
+                                  color: Colors.red,
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                const Text(
+                                  "No Internet Connection",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                Text(
+                                  "Please reconnect internet and try again.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.grey.shade700),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                Container(
+                                  padding: const EdgeInsets.all(14),
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+
+                                  child: Column(
+                                    children: const [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.vpn_key,
+                                            color: Colors.blue,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              "Turn ON VPN if API is blocked",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      SizedBox(height: 14),
+
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.airplanemode_active,
+                                            color: Colors.orange,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              "Try Airplane Mode ON/OFF",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      SizedBox(height: 14),
+
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.restart_alt,
+                                            color: Colors.green,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              "Reconnect mobile data or WiFi",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),
@@ -492,14 +587,15 @@ class HomeScreen extends ConsumerWidget {
 
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-
+                            backgroundColor: hasNetworkError
+                                ? Colors.grey
+                                : Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
 
-                          onPressed: isLoading
+                          onPressed: (isLoading || hasNetworkError)
                               ? null
                               : () async {
                                   if (!formKey.currentState!.validate()) {
