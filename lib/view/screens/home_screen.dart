@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controller/providers/inventory_provider.dart';
 
 import '../widgets/const/app_color.dart';
-import '../widgets/custom/add_item_bottom_sheet.dart';
-import '../widgets/custom/delete_confirm_dialog.dart';
-import '../widgets/custom/edit_item_dialog.dart';
-import '../widgets/custom/empty_inventory_widget.dart';
-import '../widgets/custom/home_app_bar.dart';
-import '../widgets/custom/inventory_item_card.dart';
+import 'home_screen_widget/add_item_bottom_sheet.dart';
+import 'home_screen_widget/delete_confirm_dialog.dart';
+import 'home_screen_widget/edit_item_dialog.dart';
+import 'home_screen_widget/empty_inventory_widget.dart';
+import 'home_screen_widget/home_app_bar.dart';
+import 'home_screen_widget/inventory_item_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

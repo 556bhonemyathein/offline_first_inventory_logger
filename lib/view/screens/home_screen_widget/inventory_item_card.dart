@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../model/inventory_item_model.dart';
-import '../const/app_color.dart';
-import '../const/app_spacing.dart';
+import '../../widgets/const/app_color.dart';
+import '../../widgets/const/app_spacing.dart';
 
 class InventoryItemCard extends StatelessWidget {
   final InventoryItemModel item;

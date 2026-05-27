@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../controller/providers/inventory_provider.dart';
 import '../../../model/inventory_item_model.dart';
-import 'confirm_dialog.dart';
-import '../const/app_color.dart';
+import '../../widgets/custom/custom_confirm_dialog.dart';
+import '../../widgets/const/app_color.dart';
 
 class EditItemDialog extends ConsumerStatefulWidget {
   final InventoryItemModel item;
@@ -120,7 +120,7 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
                   final confirm = await showDialog<bool>(
                     context: context,
 
-                    builder: (_) => const ConfirmDialog(
+                    builder: (_) => const CustomConfirmDialog(
                       title: "Update Item",
 
                       content: "Are you sure you want to update this item?",

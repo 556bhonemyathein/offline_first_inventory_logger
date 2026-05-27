@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../const/app_color.dart';
+import '../../widgets/const/app_color.dart';
 
 class EmptyInventoryWidget extends StatelessWidget {
   const EmptyInventoryWidget({super.key});

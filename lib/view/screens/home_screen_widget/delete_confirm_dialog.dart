@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../const/app_color.dart';
+import '../../widgets/const/app_color.dart';
 
 class DeleteConfirmDialog extends StatelessWidget {
   final String itemName;
