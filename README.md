@@ -27,6 +27,7 @@ A Flutter mobile application that manages inventory items locally using SQLite w
 - Flutter Slidable
 - Intl
 - Logger
+- path
 
 ---
 
