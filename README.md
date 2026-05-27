@@ -67,23 +67,6 @@ Riverpod was chosen because it provides:
 
 ---
 
-## Folder Structure
-
-```text
-lib/
-├── controller/
-├── data/
-│   ├── repositories/
-│   └── services/
-├── model/
-├── view/
-│   ├── screens/
-│   └── widgets/
-
----
-
-
-
 ## Screenshots
 
 ### Home Screen
@@ -112,6 +95,20 @@ lib/
 <img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/101b3975-ec2b-4f73-9835-cd113fe6b134" />
 <img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/f3a17b6d-578a-4468-b70a-b9662b7584f8" />
 
+
+---
+## Folder Structure
+
+```text
+lib/
+├── controller/
+├── data/
+│   ├── repositories/
+│   └── services/
+├── model/
+├── view/
+│   ├── screens/
+│   └── widgets/
 
 ---
 
