@@ -161,7 +161,7 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
         final supplierList = suppliers as List<SupplierModel>;
 
         return DropdownButtonFormField<String>(
-          value: _selectedSupplier,
+          initialValue: _selectedSupplier,
 
           decoration: InputDecoration(
             labelText: 'Supplier',
@@ -268,14 +268,13 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
 
       await widget.ref.read(inventoryProvider.notifier).addItem(item);
 
-      if (mounted) {
-        Navigator.pop(context);
-        CustomSnackbar.show(
-          context,
-          message: "Item Added Successfully",
-          color: Colors.green,
-        );
-      }
+      if (!mounted) return;
+      Navigator.pop(context);
+      CustomSnackbar.show(
+        context,
+        message: "Item Added Successfully",
+        color: Colors.green,
+      );
     } catch (e) {
       CustomSnackbar.show(context, message: "Error: $e", color: Colors.red);
     } finally {

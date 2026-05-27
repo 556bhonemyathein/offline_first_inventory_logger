@@ -100,7 +100,7 @@ class InventoryItemCard extends StatelessWidget {
 
       boxShadow: [
         BoxShadow(
-          color: AppColors.grey.withOpacity(0.08),
+          color: AppColors.grey,
 
           blurRadius: 12,
 
