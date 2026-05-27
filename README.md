@@ -117,3 +117,5 @@ lib/
 ```bash
 flutter pub get
 flutter run
+flutter analyze
+dart format .
