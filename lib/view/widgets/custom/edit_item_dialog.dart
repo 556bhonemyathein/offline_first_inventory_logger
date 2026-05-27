@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controller/providers/inventory_provider.dart';
-import '../model/inventory_item_model.dart';
-import 'confirm_dialog.dart';
+import '../../../controller/providers/inventory_provider.dart';
+import '../../../model/inventory_item_model.dart';
+import 'condirm_dialog.dart';
 
 class EditItemDialog extends ConsumerStatefulWidget {
   final InventoryItemModel item;
@@ -127,6 +127,7 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
                       confirmText: "Update",
 
                       confirmColor: Colors.blue,
+                      icon: Icons.edit,
                     ),
                   );
 
