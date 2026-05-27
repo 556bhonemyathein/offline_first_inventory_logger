@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../controller/providers/inventory_provider.dart';
 import '../../model/inventory_item_model.dart';
 import '../../model/supplier_model.dart';
+import '../widgets/custom/empty_inventory_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -31,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
 
       /// BODY
       body: items.isEmpty
-          ? _buildEmptyState()
+          ? const EmptyInventoryWidget()
           : ListView.builder(
               padding: const EdgeInsets.only(top: 10, bottom: 100),
 
@@ -290,46 +291,6 @@ class HomeScreen extends ConsumerWidget {
 
         icon: const Icon(Icons.add),
         label: const Text("Add Item"),
-      ),
-    );
-  }
-
-  /// EMPTY STATE
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              shape: BoxShape.circle,
-            ),
-
-            child: Icon(
-              Icons.inventory_2_outlined,
-              size: 70,
-              color: Colors.blue.shade700,
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          const Text(
-            "No Inventory Yet",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-
-          const SizedBox(height: 10),
-
-          Text(
-            "Tap + button to add inventory item",
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
-          ),
-        ],
       ),
     );
   }
