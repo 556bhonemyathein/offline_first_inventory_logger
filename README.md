@@ -115,6 +115,7 @@ lib/
 ## Run Project
 
 ```bash
+flutter clean
 flutter pub get
 flutter run
 flutter analyze
