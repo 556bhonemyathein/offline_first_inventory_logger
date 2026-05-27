@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import '../../controller/providers/inventory_provider.dart';
-
 import '../widgets/custom/add_item_bottom_sheet.dart';
 import '../widgets/custom/delete_confirm_dialog.dart';
 import '../widgets/custom/edit_item_dialog.dart';
