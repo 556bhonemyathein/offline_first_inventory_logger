@@ -69,6 +69,14 @@ class HomeScreen extends ConsumerWidget {
                           color: Colors.green,
                         );
                       }
+                    } else {
+                      if (context.mounted) {
+                        CustomSnackbar.show(
+                          context,
+                          message: "Deletion cancelled",
+                          color: Colors.orange,
+                        );
+                      }
                     }
                   },
                 );
