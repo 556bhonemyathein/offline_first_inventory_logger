@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../controller/providers/inventory_provider.dart';
 import '../../model/inventory_item_model.dart';
+import '../../model/supplier_model.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -320,9 +321,9 @@ class HomeScreen extends ConsumerWidget {
                         value: selectedSupplier,
 
                         items: suppliers.map<DropdownMenuItem<String>>((
-                          supplier,
+                          SupplierModel supplier,
                         ) {
-                          return DropdownMenuItem(
+                          return DropdownMenuItem<String>(
                             value: supplier.name,
                             child: Text(supplier.name),
                           );
