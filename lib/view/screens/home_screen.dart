@@ -16,7 +16,7 @@ class HomeScreen extends ConsumerWidget {
     final suppliersAsync = ref.watch(suppliersProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xffF5F7FA),
+      backgroundColor: const Color(0xffF4F7FB),
 
       appBar: AppBar(
         elevation: 0,
@@ -24,14 +24,47 @@ class HomeScreen extends ConsumerWidget {
         centerTitle: true,
 
         title: const Text(
-          'Inventory Logger',
+          'Offline First Inventory Logger',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
 
       body: items.isEmpty
-          ? const Center(
-              child: Text('No inventory items', style: TextStyle(fontSize: 16)),
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      shape: BoxShape.circle,
+                    ),
+
+                    child: Icon(
+                      Icons.inventory_2_outlined,
+                      size: 70,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    "No Inventory Yet",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    "Tap + button to add inventory item",
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+                  ),
+                ],
+              ),
             )
           : ListView.builder(
               padding: const EdgeInsets.only(top: 10, bottom: 100),
@@ -43,16 +76,16 @@ class HomeScreen extends ConsumerWidget {
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 7,
+                    horizontal: 16,
+                    vertical: 8,
                   ),
 
                   child: Slidable(
                     key: Key(item.id.toString()),
 
-                    /// LEFT = EDIT
+                    /// LEFT ACTION = EDIT
                     startActionPane: ActionPane(
-                      motion: const StretchMotion(),
+                      motion: const DrawerMotion(),
 
                       children: [
                         SlidableAction(
@@ -64,6 +97,7 @@ class HomeScreen extends ConsumerWidget {
                           foregroundColor: Colors.white,
 
                           icon: Icons.edit,
+
                           label: 'Edit',
 
                           borderRadius: BorderRadius.circular(20),
@@ -71,9 +105,9 @@ class HomeScreen extends ConsumerWidget {
                       ],
                     ),
 
-                    /// RIGHT = DELETE
+                    /// RIGHT ACTION = DELETE
                     endActionPane: ActionPane(
-                      motion: const StretchMotion(),
+                      motion: const DrawerMotion(),
 
                       children: [
                         SlidableAction(
@@ -81,12 +115,17 @@ class HomeScreen extends ConsumerWidget {
                             await ref
                                 .read(inventoryProvider.notifier)
                                 .deleteItem(item.id!);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Item deleted")),
+                            );
                           },
 
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
 
                           icon: Icons.delete,
+
                           label: 'Delete',
 
                           borderRadius: BorderRadius.circular(20),
@@ -98,35 +137,35 @@ class HomeScreen extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
 
-                        borderRadius: BorderRadius.circular(22),
+                        borderRadius: BorderRadius.circular(24),
 
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
 
-                            blurRadius: 10,
+                            blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
                         ],
                       ),
 
                       child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
+                        contentPadding: const EdgeInsets.all(18),
 
                         leading: Container(
-                          width: 56,
-                          height: 56,
+                          width: 60,
+                          height: 60,
 
                           decoration: BoxDecoration(
                             color: Colors.blue.shade50,
 
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(18),
                           ),
 
-                          child: const Icon(
+                          child: Icon(
                             Icons.inventory_2_outlined,
-                            color: Colors.blue,
-                            size: 30,
+                            color: Colors.blue.shade700,
+                            size: 32,
                           ),
                         ),
 
@@ -134,44 +173,60 @@ class HomeScreen extends ConsumerWidget {
                           item.itemName,
 
                           style: const TextStyle(
-                            fontSize: 17,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
 
                         subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.only(top: 10),
 
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
 
                             children: [
-                              Text(
-                                "Supplier: ${item.supplier}",
-                                style: const TextStyle(fontSize: 14),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.person_outline,
+                                    size: 16,
+                                    color: Colors.grey.shade700,
+                                  ),
+
+                                  const SizedBox(width: 5),
+
+                                  Expanded(
+                                    child: Text(
+                                      item.supplier,
+                                      style: TextStyle(
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
 
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 10),
 
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
+                                  horizontal: 12,
+                                  vertical: 6,
                                 ),
 
                                 decoration: BoxDecoration(
                                   color: Colors.green.shade50,
 
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
 
                                 child: Text(
-                                  "Qty: ${item.quantity}",
+                                  "Quantity : ${item.quantity}",
 
                                   style: TextStyle(
                                     color: Colors.green.shade700,
 
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -185,24 +240,25 @@ class HomeScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
 
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.access_time,
                               size: 16,
-                              color: Colors.grey,
+                              color: Colors.grey.shade600,
                             ),
 
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 5),
 
                             SizedBox(
-                              width: 80,
+                              width: 90,
 
                               child: Text(
                                 item.dateAdded,
+
                                 textAlign: TextAlign.end,
 
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Colors.grey,
+                                  color: Colors.grey.shade600,
                                 ),
                               ),
                             ),
@@ -228,7 +284,10 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  /// ADD ITEM BOTTOM SHEET
+  /// =========================
+  /// ADD ITEM SHEET
+  /// =========================
+
   void showAddBottomSheet(
     BuildContext context,
     WidgetRef ref,
@@ -237,7 +296,10 @@ class HomeScreen extends ConsumerWidget {
     final formKey = GlobalKey<FormState>();
 
     final nameController = TextEditingController();
+
     final quantityController = TextEditingController();
+
+    bool isLoading = false;
 
     String? selectedSupplier;
 
@@ -245,203 +307,272 @@ class HomeScreen extends ConsumerWidget {
       context: context,
 
       isScrollControlled: true,
+
       backgroundColor: Colors.transparent,
 
       builder: (_) {
-        return Container(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-          ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
 
-          decoration: const BoxDecoration(
-            color: Colors.white,
+              decoration: const BoxDecoration(
+                color: Colors.white,
 
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
 
-          child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
+              child: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
 
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
 
-                children: [
-                  Container(
-                    width: 50,
-                    height: 5,
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 5,
 
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
 
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  const Text(
-                    'Add Inventory Item',
-
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  /// ITEM NAME
-                  TextFormField(
-                    controller: nameController,
-
-                    decoration: InputDecoration(
-                      labelText: 'Item Name',
-
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                    ),
 
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Enter item name';
-                      }
+                      const SizedBox(height: 20),
 
-                      return null;
-                    },
-                  ),
+                      const Text(
+                        "Add Inventory Item",
 
-                  const SizedBox(height: 18),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
 
-                  /// SUPPLIER
-                  suppliersAsync.when(
-                    data: (suppliers) {
-                      return DropdownButtonFormField<String>(
-                        value: selectedSupplier,
+                      const SizedBox(height: 25),
 
-                        items: suppliers.map<DropdownMenuItem<String>>((
-                          SupplierModel supplier,
-                        ) {
-                          return DropdownMenuItem<String>(
-                            value: supplier.name,
-                            child: Text(supplier.name),
-                          );
-                        }).toList(),
-
-                        onChanged: (value) {
-                          selectedSupplier = value;
-                        },
+                      /// ITEM NAME
+                      TextFormField(
+                        controller: nameController,
 
                         decoration: InputDecoration(
-                          labelText: 'Supplier',
+                          labelText: 'Item Name',
+
+                          prefixIcon: const Icon(Icons.inventory),
 
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(18),
                           ),
                         ),
 
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Select supplier';
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Item name required';
                           }
 
                           return null;
                         },
-                      );
-                    },
-
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-
-                    error: (e, _) => Text(e.toString()),
-                  ),
-
-                  const SizedBox(height: 18),
-
-                  /// QUANTITY
-                  TextFormField(
-                    controller: quantityController,
-
-                    keyboardType: TextInputType.number,
-
-                    decoration: InputDecoration(
-                      labelText: 'Quantity',
-
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
                       ),
-                    ),
 
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Enter quantity';
-                      }
+                      const SizedBox(height: 18),
 
-                      if (int.tryParse(value) == null) {
-                        return 'Must be number';
-                      }
+                      /// SUPPLIER
+                      suppliersAsync.when(
+                        data: (suppliers) {
+                          final supplierList = suppliers as List<SupplierModel>;
 
-                      return null;
-                    },
-                  ),
+                          return DropdownButtonFormField<String>(
+                            value: selectedSupplier,
 
-                  const SizedBox(height: 28),
+                            items: supplierList.map<DropdownMenuItem<String>>((
+                              supplier,
+                            ) {
+                              return DropdownMenuItem(
+                                value: supplier.name,
 
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55,
+                                child: Text(supplier.name),
+                              );
+                            }).toList(),
 
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedSupplier = value;
+                              });
+                            },
 
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                            decoration: InputDecoration(
+                              labelText: 'Supplier',
+
+                              prefixIcon: const Icon(Icons.person_outline),
+
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Select supplier';
+                              }
+
+                              return null;
+                            },
+                          );
+                        },
+
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+
+                        error: (e, _) {
+                          return Column(
+                            children: [
+                              const Icon(
+                                Icons.wifi_off,
+                                size: 60,
+                                color: Colors.red,
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              const Text("Network Error"),
+
+                              Text(
+                                e.toString(),
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 18),
+
+                      /// QUANTITY
+                      TextFormField(
+                        controller: quantityController,
+
+                        keyboardType: TextInputType.number,
+
+                        decoration: InputDecoration(
+                          labelText: 'Quantity',
+
+                          prefixIcon: const Icon(Icons.numbers),
+
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Quantity required';
+                          }
+
+                          if (int.tryParse(value) == null) {
+                            return 'Quantity must be number';
+                          }
+
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 28),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 58,
+
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                          ),
+
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  if (!formKey.currentState!.validate()) {
+                                    return;
+                                  }
+
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  final item = InventoryItemModel(
+                                    itemName: nameController.text,
+
+                                    supplier: selectedSupplier ?? '',
+
+                                    quantity: int.parse(
+                                      quantityController.text,
+                                    ),
+
+                                    dateAdded: DateFormat(
+                                      'yyyy-MM-dd HH:mm',
+                                    ).format(DateTime.now()),
+                                  );
+
+                                  await ref
+                                      .read(inventoryProvider.notifier)
+                                      .addItem(item);
+
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Item Added Successfully",
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+
+                          child: isLoading
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  "Save Item",
+
+                                  style: TextStyle(fontSize: 16),
+                                ),
                         ),
                       ),
-
-                      onPressed: () async {
-                        if (!formKey.currentState!.validate()) {
-                          return;
-                        }
-
-                        final item = InventoryItemModel(
-                          itemName: nameController.text,
-
-                          supplier: selectedSupplier ?? '',
-
-                          quantity: int.parse(quantityController.text),
-
-                          dateAdded: DateFormat(
-                            'yyyy-MM-dd HH:mm',
-                          ).format(DateTime.now()),
-                        );
-
-                        await ref
-                            .read(inventoryProvider.notifier)
-                            .addItem(item);
-
-                        Navigator.pop(context);
-                      },
-
-                      child: const Text(
-                        'Save Item',
-
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
   }
 
+  /// =========================
   /// EDIT DIALOG
+  /// =========================
+
   void showEditDialog(
     BuildContext context,
     WidgetRef ref,
@@ -464,7 +595,7 @@ class HomeScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(24),
           ),
 
-          title: const Text("Edit Item"),
+          title: const Text("Edit Inventory"),
 
           content: Form(
             key: formKey,
@@ -480,7 +611,7 @@ class HomeScreen extends ConsumerWidget {
 
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Enter item name';
+                      return 'Required';
                     }
 
                     return null;
@@ -498,7 +629,7 @@ class HomeScreen extends ConsumerWidget {
 
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Enter quantity';
+                      return 'Required';
                     }
 
                     if (int.tryParse(value) == null) {
@@ -543,7 +674,13 @@ class HomeScreen extends ConsumerWidget {
                     .read(inventoryProvider.notifier)
                     .updateItem(updatedItem);
 
-                Navigator.pop(context);
+                if (context.mounted) {
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text("Item Updated")));
+                }
               },
 
               child: const Text("Update"),
