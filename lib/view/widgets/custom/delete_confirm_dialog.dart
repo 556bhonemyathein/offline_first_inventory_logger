@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+
+class DeleteConfirmDialog extends StatelessWidget {
+  final String itemName;
+  final VoidCallback onDelete;
+
+  const DeleteConfirmDialog({
+    super.key,
+    required this.itemName,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+
+      title: const Text("Delete Item"),
+
+      content: Text("Are you sure you want to delete '$itemName'?"),
+
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+
+          child: const Text("Cancel"),
+        ),
+
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+
+          onPressed: () {
+            Navigator.pop(context);
+            onDelete();
+          },
+
+          child: const Text("Delete"),
+        ),
+      ],
+    );
+  }
+}
