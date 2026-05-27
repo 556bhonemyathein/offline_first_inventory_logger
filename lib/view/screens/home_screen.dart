@@ -100,7 +100,9 @@ class HomeScreen extends ConsumerWidget {
                           border: OutlineInputBorder(),
                         ),
                       ),
+
                       const SizedBox(height: 20),
+
                       ElevatedButton(
                         onPressed: () async {
                           final item = InventoryItemModel(
