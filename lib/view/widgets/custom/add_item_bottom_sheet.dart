@@ -5,7 +5,10 @@ import 'package:intl/intl.dart';
 import '../../../controller/providers/inventory_provider.dart';
 import '../../../model/inventory_item_model.dart';
 import '../../../model/supplier_model.dart';
+
 import '../const/app_color.dart';
+import '../const/app_spacing.dart';
+import 'custom_text_field.dart';
 
 class AddItemBottomSheet extends StatefulWidget {
   final WidgetRef ref;
@@ -45,36 +48,81 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
 
     return Container(
       padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        left: AppSpacing.screenPadding,
+        right: AppSpacing.screenPadding,
+        top: AppSpacing.screenPadding,
+        bottom:
+            MediaQuery.of(context).viewInsets.bottom + AppSpacing.screenPadding,
       ),
+
       decoration: const BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.largeRadius),
+        ),
       ),
+
       child: SingleChildScrollView(
         child: Form(
           key: _formKey,
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
+
             children: [
               _buildTopBar(),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: AppSpacing.large),
 
               _buildTitle(),
-              const SizedBox(height: 25),
 
-              _buildNameField(),
-              const SizedBox(height: 18),
+              const SizedBox(height: AppSpacing.extraLarge),
 
+              /// ITEM NAME
+              CustomTextField(
+                controller: _nameController,
+                label: 'Item Name',
+                icon: Icons.inventory,
+
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Item name required';
+                  }
+
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: AppSpacing.medium),
+
+              /// SUPPLIER
               _buildSupplierDropdown(),
-              const SizedBox(height: 18),
 
-              _buildQuantityField(),
-              const SizedBox(height: 28),
+              const SizedBox(height: AppSpacing.medium),
 
+              /// QUANTITY
+              CustomTextField(
+                controller: _quantityController,
+                label: 'Quantity',
+                icon: Icons.numbers,
+                keyboardType: TextInputType.number,
+
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Quantity required';
+                  }
+
+                  if (int.tryParse(value) == null) {
+                    return 'Must be number';
+                  }
+
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: AppSpacing.large),
+
+              /// SAVE BUTTON
               _buildSaveButton(isSupplierLoading),
             ],
           ),
@@ -88,8 +136,9 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
     return Container(
       width: 60,
       height: 5,
+
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: AppColors.grey.shade300,
         borderRadius: BorderRadius.circular(20),
       ),
     );
@@ -99,25 +148,12 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
   Widget _buildTitle() {
     return const Text(
       "Add Inventory Item",
+
       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
     );
   }
 
-  /// ITEM NAME
-  Widget _buildNameField() {
-    return TextFormField(
-      controller: _nameController,
-      decoration: _inputDecoration(label: 'Item Name', icon: Icons.inventory),
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Item name required';
-        }
-        return null;
-      },
-    );
-  }
-
-  /// SUPPLIER
+  /// SUPPLIER DROPDOWN
   Widget _buildSupplierDropdown() {
     return widget.suppliersAsync.when(
       data: (suppliers) {
@@ -127,32 +163,42 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
 
         return DropdownButtonFormField<String>(
           value: _selectedSupplier,
-          decoration: _inputDecoration(
-            label: 'Supplier',
-            icon: Icons.person_outline,
+
+          decoration: InputDecoration(
+            labelText: 'Supplier',
+
+            prefixIcon: const Icon(Icons.person_outline),
+
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.mediumRadius),
+            ),
           ),
+
           items: supplierList.map<DropdownMenuItem<String>>((supplier) {
             return DropdownMenuItem(
               value: supplier.name,
               child: Text(supplier.name),
             );
           }).toList(),
+
           onChanged: (value) {
             setState(() {
               _selectedSupplier = value;
             });
           },
+
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Select supplier';
             }
+
             return null;
           },
         );
       },
 
       loading: () => const Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(AppSpacing.medium),
         child: CircularProgressIndicator(),
       ),
 
@@ -164,47 +210,32 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
     );
   }
 
-  /// QUANTITY
-  Widget _buildQuantityField() {
-    return TextFormField(
-      controller: _quantityController,
-      keyboardType: TextInputType.number,
-      decoration: _inputDecoration(label: 'Quantity', icon: Icons.numbers),
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Quantity required';
-        }
-
-        if (int.tryParse(value) == null) {
-          return 'Must be number';
-        }
-
-        return null;
-      },
-    );
-  }
-
   /// SAVE BUTTON
   Widget _buildSaveButton(bool isSupplierLoading) {
     return SizedBox(
       width: double.infinity,
       height: 58,
+
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: (_hasNetworkError || isSupplierLoading)
               ? AppColors.grey
               : AppColors.primary,
+
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(AppSpacing.mediumRadius),
           ),
         ),
+
         onPressed: (_isLoading || _hasNetworkError || isSupplierLoading)
             ? null
             : _saveItem,
+
         child: _isLoading
             ? const SizedBox(
                 width: 22,
                 height: 22,
+
                 child: CircularProgressIndicator(
                   color: AppColors.white,
                   strokeWidth: 2,
@@ -227,9 +258,12 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
 
     try {
       final item = InventoryItemModel(
-        itemName: _nameController.text,
+        itemName: _nameController.text.trim(),
+
         supplier: _selectedSupplier ?? '',
+
         quantity: int.parse(_quantityController.text),
+
         dateAdded: DateFormat('MMM dd, yyyy • hh:mm a').format(DateTime.now()),
       );
 
@@ -257,45 +291,40 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
   Widget _buildNetworkError() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+
+      padding: const EdgeInsets.all(AppSpacing.screenPadding),
+
       decoration: BoxDecoration(
         color: AppColors.red.shade50,
-        borderRadius: BorderRadius.circular(20),
+
+        borderRadius: BorderRadius.circular(AppSpacing.mediumRadius),
+
         border: Border.all(color: AppColors.red.shade200),
       ),
+
       child: Column(
         children: [
           const Icon(Icons.wifi_off, size: 70, color: AppColors.red),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.medium),
 
           const Text(
             "No Internet Connection",
+
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.small),
 
           Text(
-            "Reconnect internet and try again.Or use vpn if you have one.",
+            "Reconnect internet and try again.\nOr use VPN if available.",
 
             textAlign: TextAlign.center,
+
             style: TextStyle(color: AppColors.grey.shade700),
           ),
         ],
       ),
-    );
-  }
-
-  /// INPUT DECORATION
-  InputDecoration _inputDecoration({
-    required String label,
-    required IconData icon,
-  }) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
     );
   }
 }
