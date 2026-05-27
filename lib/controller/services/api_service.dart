@@ -39,9 +39,20 @@
 //   }
 // }
 
+import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
+
 import '../../model/supplier_model.dart';
 
 class ApiService {
+  final logger = Logger();
+
+  final Dio dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  );
   Future<List<SupplierModel>> fetchSuppliers() async {
     await Future.delayed(const Duration(seconds: 1));
 
