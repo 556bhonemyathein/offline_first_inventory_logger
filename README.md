@@ -24,5 +24,5 @@ flutter pub get
 flutter run
 
 ## Architecture
-- MVVM-like clean structure
+- MVC-like clean structure
 - Riverpod for state management
