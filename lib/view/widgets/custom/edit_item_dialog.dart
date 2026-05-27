@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../controller/providers/inventory_provider.dart';
 import '../../../model/inventory_item_model.dart';
-import '../const/confirm_dialog.dart';
+import 'confirm_dialog.dart';
 import '../const/app_color.dart';
 
 class EditItemDialog extends ConsumerStatefulWidget {
