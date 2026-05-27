@@ -5,6 +5,7 @@ import '../../../controller/providers/inventory_provider.dart';
 import '../../../model/inventory_item_model.dart';
 import '../../widgets/custom/custom_confirm_dialog.dart';
 import '../../widgets/const/app_color.dart';
+import '../../widgets/custom/custom_snackbar.dart';
 
 class EditItemDialog extends ConsumerStatefulWidget {
   final InventoryItemModel item;
@@ -18,9 +19,9 @@ class EditItemDialog extends ConsumerStatefulWidget {
 class _EditItemDialogState extends ConsumerState<EditItemDialog> {
   final formKey = GlobalKey<FormState>();
 
-  late TextEditingController nameController;
+  late TextEditingController _nameController;
 
-  late TextEditingController quantityController;
+  late TextEditingController _quantityController;
 
   bool isUpdating = false;
 
@@ -28,17 +29,17 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
   void initState() {
     super.initState();
 
-    nameController = TextEditingController(text: widget.item.itemName);
+    _nameController = TextEditingController(text: widget.item.itemName);
 
-    quantityController = TextEditingController(
+    _quantityController = TextEditingController(
       text: widget.item.quantity.toString(),
     );
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    quantityController.dispose();
+    _nameController.dispose();
+    _quantityController.dispose();
 
     super.dispose();
   }
@@ -59,7 +60,7 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
           children: [
             /// ITEM NAME
             TextFormField(
-              controller: nameController,
+              controller: _nameController,
 
               decoration: const InputDecoration(labelText: 'Item Name'),
 
@@ -76,7 +77,7 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
 
             /// QUANTITY
             TextFormField(
-              controller: quantityController,
+              controller: _quantityController,
 
               keyboardType: TextInputType.number,
 
@@ -144,11 +145,11 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
                     final updatedItem = InventoryItemModel(
                       id: widget.item.id,
 
-                      itemName: nameController.text,
+                      itemName: _nameController.text,
 
                       supplier: widget.item.supplier,
 
-                      quantity: int.parse(quantityController.text),
+                      quantity: int.parse(_quantityController.text),
 
                       dateAdded: widget.item.dateAdded,
                     );
@@ -159,11 +160,10 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
 
                     if (context.mounted) {
                       Navigator.pop(context);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Item Updated Successfully"),
-                        ),
+                      CustomSnackbar.show(
+                        context,
+                        message: "Item Updated Successfully",
+                        color: Colors.green,
                       );
                     }
                   } finally {

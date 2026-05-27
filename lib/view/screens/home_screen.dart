@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controller/providers/inventory_provider.dart';
 
 import '../widgets/const/app_color.dart';
+import '../widgets/custom/custom_snackbar.dart';
 import 'home_screen_widget/add_item_bottom_sheet.dart';
 import 'home_screen_widget/delete_confirm_dialog.dart';
 import 'home_screen_widget/edit_item_dialog.dart';
@@ -62,10 +63,10 @@ class HomeScreen extends ConsumerWidget {
                           .deleteItem(item.id!);
 
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Item deleted successfully"),
-                          ),
+                        CustomSnackbar.show(
+                          context,
+                          message: "Item deleted successfully",
+                          color: Colors.green,
                         );
                       }
                     }

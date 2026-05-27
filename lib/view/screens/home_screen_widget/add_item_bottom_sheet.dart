@@ -6,6 +6,7 @@ import '../../../model/inventory_item_model.dart';
 import '../../../model/supplier_model.dart';
 import '../../widgets/const/app_color.dart';
 import '../../widgets/const/app_spacing.dart';
+import '../../widgets/custom/custom_snackbar.dart';
 import '../../widgets/custom/custom_text_field.dart';
 
 class AddItemBottomSheet extends StatefulWidget {
@@ -269,15 +270,14 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
 
       if (mounted) {
         Navigator.pop(context);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Item Added Successfully")),
+        CustomSnackbar.show(
+          context,
+          message: "Item Added Successfully",
+          color: Colors.green,
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      CustomSnackbar.show(context, message: "Error: $e", color: Colors.red);
     } finally {
       setState(() {
         _isLoading = false;
