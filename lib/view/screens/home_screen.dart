@@ -29,43 +29,9 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
 
+      /// BODY
       body: items.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
-
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      shape: BoxShape.circle,
-                    ),
-
-                    child: Icon(
-                      Icons.inventory_2_outlined,
-                      size: 70,
-                      color: Colors.blue.shade700,
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  const Text(
-                    "No Inventory Yet",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Text(
-                    "Tap + button to add inventory item",
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
-                  ),
-                ],
-              ),
-            )
+          ? _buildEmptyState()
           : ListView.builder(
               padding: const EdgeInsets.only(top: 10, bottom: 100),
 
@@ -83,21 +49,20 @@ class HomeScreen extends ConsumerWidget {
                   child: Slidable(
                     key: Key(item.id.toString()),
 
-                    /// LEFT ACTION = EDIT
+                    /// LEFT = EDIT
                     startActionPane: ActionPane(
                       motion: const DrawerMotion(),
 
                       children: [
                         SlidableAction(
                           onPressed: (_) {
-                            showEditDialog(context, ref, item);
+                            _showEditDialog(context, ref, item);
                           },
 
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
 
                           icon: Icons.edit,
-
                           label: 'Edit',
 
                           borderRadius: BorderRadius.circular(20),
@@ -105,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
                       ],
                     ),
 
-                    /// RIGHT ACTION = DELETE
+                    /// RIGHT = DELETE
                     endActionPane: ActionPane(
                       motion: const DrawerMotion(),
 
@@ -116,16 +81,17 @@ class HomeScreen extends ConsumerWidget {
                                 .read(inventoryProvider.notifier)
                                 .deleteItem(item.id!);
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Item deleted")),
-                            );
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Item deleted")),
+                              );
+                            }
                           },
 
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
 
                           icon: Icons.delete,
-
                           label: 'Delete',
 
                           borderRadius: BorderRadius.circular(20),
@@ -249,7 +215,7 @@ class HomeScreen extends ConsumerWidget {
                             const SizedBox(height: 5),
 
                             SizedBox(
-                              width: 90,
+                              width: 95,
 
                               child: Text(
                                 item.dateAdded,
@@ -271,11 +237,12 @@ class HomeScreen extends ConsumerWidget {
               },
             ),
 
+      /// FAB
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.black,
 
         onPressed: () {
-          showAddBottomSheet(context, ref, suppliersAsync);
+          _showAddBottomSheet(context, ref, suppliersAsync);
         },
 
         icon: const Icon(Icons.add),
@@ -284,11 +251,48 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  /// =========================
-  /// ADD ITEM SHEET
-  /// =========================
+  /// EMPTY STATE
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
 
-  void showAddBottomSheet(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              shape: BoxShape.circle,
+            ),
+
+            child: Icon(
+              Icons.inventory_2_outlined,
+              size: 70,
+              color: Colors.blue.shade700,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          const Text(
+            "No Inventory Yet",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+
+          const SizedBox(height: 10),
+
+          Text(
+            "Tap + button to add inventory item",
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ADD ITEM
+  void _showAddBottomSheet(
     BuildContext context,
     WidgetRef ref,
     AsyncValue suppliersAsync,
@@ -299,10 +303,9 @@ class HomeScreen extends ConsumerWidget {
 
     final quantityController = TextEditingController();
 
-    bool isLoading = false;
-
     String? selectedSupplier;
 
+    bool isLoading = false;
     bool hasNetworkError = false;
 
     showModalBottomSheet(
@@ -315,6 +318,8 @@ class HomeScreen extends ConsumerWidget {
       builder: (_) {
         return StatefulBuilder(
           builder: (context, setState) {
+            final isSupplierLoading = suppliersAsync.isLoading;
+
             return Container(
               padding: EdgeInsets.only(
                 left: 20,
@@ -431,9 +436,11 @@ class HomeScreen extends ConsumerWidget {
                           );
                         },
 
-                        loading: () => const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Center(child: CircularProgressIndicator()),
+                        loading: () => Container(
+                          height: 70,
+                          alignment: Alignment.center,
+
+                          child: const CircularProgressIndicator(),
                         ),
 
                         error: (e, _) {
@@ -464,6 +471,7 @@ class HomeScreen extends ConsumerWidget {
 
                                 const Text(
                                   "No Internet Connection",
+
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -473,73 +481,23 @@ class HomeScreen extends ConsumerWidget {
                                 const SizedBox(height: 10),
 
                                 Text(
-                                  "Please reconnect internet and try again.",
+                                  "Reconnect internet and try again.",
+
                                   textAlign: TextAlign.center,
+
                                   style: TextStyle(color: Colors.grey.shade700),
                                 ),
 
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 16),
 
-                                Container(
-                                  padding: const EdgeInsets.all(14),
+                                Text(
+                                  "Try VPN or Airplane Mode ON/OFF",
 
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
+                                  textAlign: TextAlign.center,
 
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-
-                                  child: Column(
-                                    children: const [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.vpn_key,
-                                            color: Colors.blue,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              "Turn ON VPN if API is blocked",
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      SizedBox(height: 14),
-
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.airplanemode_active,
-                                            color: Colors.orange,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              "Try Airplane Mode ON/OFF",
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      SizedBox(height: 14),
-
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.restart_alt,
-                                            color: Colors.green,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              "Reconnect mobile data or WiFi",
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey.shade600,
                                   ),
                                 ),
                               ],
@@ -572,7 +530,7 @@ class HomeScreen extends ConsumerWidget {
                           }
 
                           if (int.tryParse(value) == null) {
-                            return 'Quantity must be number';
+                            return 'Must be number';
                           }
 
                           return null;
@@ -581,21 +539,27 @@ class HomeScreen extends ConsumerWidget {
 
                       const SizedBox(height: 28),
 
+                      /// SAVE BUTTON
                       SizedBox(
                         width: double.infinity,
                         height: 58,
 
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: hasNetworkError
+                            backgroundColor:
+                                (hasNetworkError || isSupplierLoading)
                                 ? Colors.grey
                                 : Colors.black,
+
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
 
-                          onPressed: (isLoading || hasNetworkError)
+                          onPressed:
+                              (isLoading ||
+                                  hasNetworkError ||
+                                  isSupplierLoading)
                               ? null
                               : () async {
                                   if (!formKey.currentState!.validate()) {
@@ -606,34 +570,46 @@ class HomeScreen extends ConsumerWidget {
                                     isLoading = true;
                                   });
 
-                                  final item = InventoryItemModel(
-                                    itemName: nameController.text,
+                                  try {
+                                    final item = InventoryItemModel(
+                                      itemName: nameController.text,
 
-                                    supplier: selectedSupplier ?? '',
+                                      supplier: selectedSupplier ?? '',
 
-                                    quantity: int.parse(
-                                      quantityController.text,
-                                    ),
-
-                                    dateAdded: DateFormat(
-                                      'yyyy-MM-dd HH:mm',
-                                    ).format(DateTime.now()),
-                                  );
-
-                                  await ref
-                                      .read(inventoryProvider.notifier)
-                                      .addItem(item);
-
-                                  if (context.mounted) {
-                                    Navigator.pop(context);
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "Item Added Successfully",
-                                        ),
+                                      quantity: int.parse(
+                                        quantityController.text,
                                       ),
+
+                                      dateAdded: DateFormat(
+                                        'MMM dd, yyyy • hh:mm a',
+                                      ).format(DateTime.now()),
                                     );
+
+                                    await ref
+                                        .read(inventoryProvider.notifier)
+                                        .addItem(item);
+
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Item Added Successfully",
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Error: $e")),
+                                    );
+                                  } finally {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                   }
                                 },
 
@@ -665,11 +641,8 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  /// =========================
-  /// EDIT DIALOG
-  /// =========================
-
-  void showEditDialog(
+  /// EDIT
+  void _showEditDialog(
     BuildContext context,
     WidgetRef ref,
     InventoryItemModel item,
@@ -682,106 +655,134 @@ class HomeScreen extends ConsumerWidget {
       text: item.quantity.toString(),
     );
 
+    bool isUpdating = false;
+
     showDialog(
       context: context,
 
       builder: (_) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
 
-          title: const Text("Edit Inventory"),
+              title: const Text("Edit Inventory"),
 
-          content: Form(
-            key: formKey,
+              content: Form(
+                key: formKey,
 
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
 
-              children: [
-                TextFormField(
-                  controller: nameController,
+                  children: [
+                    TextFormField(
+                      controller: nameController,
 
-                  decoration: const InputDecoration(labelText: 'Item Name'),
+                      decoration: const InputDecoration(labelText: 'Item Name'),
 
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Required';
-                    }
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Required';
+                        }
 
-                    return null;
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: quantityController,
+
+                      keyboardType: TextInputType.number,
+
+                      decoration: const InputDecoration(labelText: 'Quantity'),
+
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Required';
+                        }
+
+                        if (int.tryParse(value) == null) {
+                          return 'Must be number';
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
+
+                  child: const Text("Cancel"),
                 ),
 
-                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: isUpdating
+                      ? null
+                      : () async {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
 
-                TextFormField(
-                  controller: quantityController,
+                          setState(() {
+                            isUpdating = true;
+                          });
 
-                  keyboardType: TextInputType.number,
+                          try {
+                            final updatedItem = InventoryItemModel(
+                              id: item.id,
 
-                  decoration: const InputDecoration(labelText: 'Quantity'),
+                              itemName: nameController.text,
 
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Required';
-                    }
+                              supplier: item.supplier,
 
-                    if (int.tryParse(value) == null) {
-                      return 'Must be number';
-                    }
+                              quantity: int.parse(quantityController.text),
 
-                    return null;
-                  },
+                              dateAdded: item.dateAdded,
+                            );
+
+                            await ref
+                                .read(inventoryProvider.notifier)
+                                .updateItem(updatedItem);
+
+                            if (context.mounted) {
+                              Navigator.pop(context);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Item Updated")),
+                              );
+                            }
+                          } finally {
+                            setState(() {
+                              isUpdating = false;
+                            });
+                          }
+                        },
+
+                  child: isUpdating
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text("Update"),
                 ),
               ],
-            ),
-          ),
-
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-
-              child: const Text("Cancel"),
-            ),
-
-            ElevatedButton(
-              onPressed: () async {
-                if (!formKey.currentState!.validate()) {
-                  return;
-                }
-
-                final updatedItem = InventoryItemModel(
-                  id: item.id,
-
-                  itemName: nameController.text,
-
-                  supplier: item.supplier,
-
-                  quantity: int.parse(quantityController.text),
-
-                  dateAdded: item.dateAdded,
-                );
-
-                await ref
-                    .read(inventoryProvider.notifier)
-                    .updateItem(updatedItem);
-
-                if (context.mounted) {
-                  Navigator.pop(context);
-
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text("Item Updated")));
-                }
-              },
-
-              child: const Text("Update"),
-            ),
-          ],
+            );
+          },
         );
       },
     );
