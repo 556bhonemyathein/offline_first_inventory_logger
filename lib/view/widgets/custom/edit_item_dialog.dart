@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../controller/providers/inventory_provider.dart';
 import '../../../model/inventory_item_model.dart';
-import 'confirm_dialog.dart';
+import '../const/confirm_dialog.dart';
+import '../const/app_color.dart';
 
 class EditItemDialog extends ConsumerStatefulWidget {
   final InventoryItemModel item;
@@ -126,7 +127,7 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
 
                       confirmText: "Update",
 
-                      confirmColor: Colors.blue,
+                      confirmColor: AppColors.primary,
                       icon: Icons.edit,
                     ),
                   );
@@ -181,7 +182,7 @@ class _EditItemDialogState extends ConsumerState<EditItemDialog> {
 
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                 )
               : const Text("Update"),

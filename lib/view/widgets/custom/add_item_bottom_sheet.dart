@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../controller/providers/inventory_provider.dart';
 import '../../../model/inventory_item_model.dart';
 import '../../../model/supplier_model.dart';
+import '../const/app_color.dart';
 
 class AddItemBottomSheet extends StatefulWidget {
   final WidgetRef ref;
@@ -50,7 +51,7 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
       child: SingleChildScrollView(
@@ -191,8 +192,8 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: (_hasNetworkError || isSupplierLoading)
-              ? Colors.grey
-              : Colors.black,
+              ? AppColors.grey
+              : AppColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
@@ -205,7 +206,7 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
                 width: 22,
                 height: 22,
                 child: CircularProgressIndicator(
-                  color: Colors.white,
+                  color: AppColors.white,
                   strokeWidth: 2,
                 ),
               )
@@ -258,13 +259,13 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
+        color: AppColors.red.shade50,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.red.shade200),
+        border: Border.all(color: AppColors.red.shade200),
       ),
       child: Column(
         children: [
-          const Icon(Icons.wifi_off, size: 70, color: Colors.red),
+          const Icon(Icons.wifi_off, size: 70, color: AppColors.red),
 
           const SizedBox(height: 16),
 
@@ -278,7 +279,7 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
           Text(
             "Reconnect internet and try again.",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey.shade700),
+            style: TextStyle(color: AppColors.grey.shade700),
           ),
         ],
       ),

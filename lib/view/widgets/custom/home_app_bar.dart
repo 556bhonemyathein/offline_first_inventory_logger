@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../const/app_color.dart';
+
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
 
@@ -7,13 +9,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       centerTitle: true,
 
       title: const Text(
         'Offline First Inventory Logger',
 
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        style: TextStyle(color: AppColors.grey, fontWeight: FontWeight.bold),
       ),
     );
   }

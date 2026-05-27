@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../model/inventory_item_model.dart';
+import '../const/app_color.dart';
 
 class InventoryItemCard extends StatelessWidget {
   final InventoryItemModel item;
@@ -31,7 +32,7 @@ class InventoryItemCard extends StatelessWidget {
             SlidableAction(
               onPressed: (_) => onEdit(),
 
-              backgroundColor: Colors.blue,
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
 
               icon: Icons.edit,
@@ -49,7 +50,7 @@ class InventoryItemCard extends StatelessWidget {
             SlidableAction(
               onPressed: (_) => onDelete(),
 
-              backgroundColor: Colors.red,
+              backgroundColor: AppColors.red,
               foregroundColor: Colors.white,
 
               icon: Icons.delete,
@@ -62,13 +63,13 @@ class InventoryItemCard extends StatelessWidget {
 
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
 
             borderRadius: BorderRadius.circular(24),
 
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: AppColors.grey,
 
                 blurRadius: 12,
                 offset: const Offset(0, 4),
@@ -84,14 +85,14 @@ class InventoryItemCard extends StatelessWidget {
               height: 60,
 
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: AppColors.blue.shade50,
 
                 borderRadius: BorderRadius.circular(18),
               ),
 
               child: Icon(
                 Icons.inventory_2_outlined,
-                color: Colors.blue.shade700,
+                color: AppColors.blue.shade700,
                 size: 32,
               ),
             ),
@@ -122,7 +123,7 @@ class InventoryItemCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.supplier,
-                          style: TextStyle(color: Colors.grey.shade700),
+                          style: TextStyle(color: AppColors.grey.shade700),
                         ),
                       ),
                     ],

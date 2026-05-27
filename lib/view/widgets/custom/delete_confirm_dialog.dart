@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../const/app_color.dart';
+
 class DeleteConfirmDialog extends StatelessWidget {
   final String itemName;
 
@@ -24,7 +26,7 @@ class DeleteConfirmDialog extends StatelessWidget {
         ),
 
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          style: ElevatedButton.styleFrom(backgroundColor: AppColors.red),
 
           onPressed: () {
             Navigator.pop(context, true);

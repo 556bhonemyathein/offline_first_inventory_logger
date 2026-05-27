@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../const/app_color.dart';
+
 class EmptyInventoryWidget extends StatelessWidget {
   const EmptyInventoryWidget({super.key});
 
@@ -14,14 +16,14 @@ class EmptyInventoryWidget extends StatelessWidget {
             padding: const EdgeInsets.all(24),
 
             decoration: BoxDecoration(
-              color: Colors.blue.shade50,
+              color: AppColors.blue.shade50,
               shape: BoxShape.circle,
             ),
 
             child: Icon(
               Icons.inventory_2_outlined,
               size: 70,
-              color: Colors.blue.shade700,
+              color: AppColors.primary,
             ),
           ),
 
@@ -38,7 +40,7 @@ class EmptyInventoryWidget extends StatelessWidget {
           Text(
             "Tap + button to add inventory item",
 
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+            style: TextStyle(color: AppColors.grey.shade600, fontSize: 15),
           ),
         ],
       ),

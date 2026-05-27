@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controller/providers/inventory_provider.dart';
 
+import '../widgets/const/app_color.dart';
 import '../widgets/custom/add_item_bottom_sheet.dart';
 import '../widgets/custom/delete_confirm_dialog.dart';
 import '../widgets/custom/edit_item_dialog.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends ConsumerWidget {
     final suppliersAsync = ref.watch(suppliersProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xffF4F7FB),
+      backgroundColor: AppColors.background,
 
       appBar: const HomeAppBar(),
 
@@ -74,7 +75,7 @@ class HomeScreen extends ConsumerWidget {
             ),
 
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.background,
 
         onPressed: () {
           showModalBottomSheet(
