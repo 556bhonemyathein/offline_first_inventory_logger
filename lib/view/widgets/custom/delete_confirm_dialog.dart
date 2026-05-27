@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 
 class DeleteConfirmDialog extends StatelessWidget {
   final String itemName;
-  final VoidCallback onDelete;
 
-  const DeleteConfirmDialog({
-    super.key,
-    required this.itemName,
-    required this.onDelete,
-  });
+  const DeleteConfirmDialog({super.key, required this.itemName});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +12,12 @@ class DeleteConfirmDialog extends StatelessWidget {
 
       title: const Text("Delete Item"),
 
-      content: Text("Are you sure you want to delete '$itemName'?"),
+      content: Text("Are you sure you want to delete '$itemName' ?"),
 
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, false);
           },
 
           child: const Text("Cancel"),
@@ -32,8 +27,7 @@ class DeleteConfirmDialog extends StatelessWidget {
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
 
           onPressed: () {
-            Navigator.pop(context);
-            onDelete();
+            Navigator.pop(context, true);
           },
 
           child: const Text("Delete"),

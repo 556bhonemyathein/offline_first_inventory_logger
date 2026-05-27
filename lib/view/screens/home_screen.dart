@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../controller/providers/inventory_provider.dart';
 
 import '../widgets/custom/add_item_bottom_sheet.dart';
+import '../widgets/custom/delete_confirm_dialog.dart';
 import '../widgets/custom/edit_item_dialog.dart';
 import '../widgets/custom/empty_inventory_widget.dart';
 
@@ -85,42 +86,11 @@ class HomeScreen extends ConsumerWidget {
                             final confirm = await showDialog<bool>(
                               context: context,
                               builder: (context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-
-                                  title: const Text("Delete Item"),
-
-                                  content: Text(
-                                    "Are you sure you want to delete '${item.itemName}' ?",
-                                  ),
-
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, false);
-                                      },
-
-                                      child: const Text("Cancel"),
-                                    ),
-
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                      ),
-
-                                      onPressed: () {
-                                        Navigator.pop(context, true);
-                                      },
-
-                                      child: const Text("Delete"),
-                                    ),
-                                  ],
+                                return DeleteConfirmDialog(
+                                  itemName: item.itemName,
                                 );
                               },
                             );
-
                             if (confirm == true) {
                               await ref
                                   .read(inventoryProvider.notifier)
