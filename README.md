@@ -84,8 +84,8 @@ lib/
 ## Screenshots
 
 ### Home Screen
-<img width="250" height="1280" alt="image" src="https://github.com/user-attachments/assets/86766657-3ccf-4598-a754-c4dd08507cf9" />
-<img width="250" height="1280" alt="image" src="https://github.com/user-attachments/assets/704f5dd7-0ff7-4018-b808-c987ccf8e26f" />
+<img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/86766657-3ccf-4598-a754-c4dd08507cf9" />
+<img width="250" height="500" alt="image" src="https://github.com/user-attachments/assets/704f5dd7-0ff7-4018-b808-c987ccf8e26f" />
 
 
 ### Add Item Bottom Sheet
