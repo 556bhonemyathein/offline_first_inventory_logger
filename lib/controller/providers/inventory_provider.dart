@@ -1,47 +1,66 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import '../../data/services/api_service.dart';
+import '../../data/services/db_service.dart';
 import '../../model/inventory_item_model.dart';
 import '../../model/supplier_model.dart';
-import '../services/api_service.dart';
-import '../services/db_service.dart';
 
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
+/// API SERVICE PROVIDER
+final apiServiceProvider = Provider<ApiService>((ref) {
+  return ApiService();
+});
 
-final dbServiceProvider = Provider<DBService>((ref) => DBService());
+/// DATABASE SERVICE PROVIDER
+final dbServiceProvider = Provider<DBService>((ref) {
+  return DBService();
+});
 
+/// SUPPLIERS PROVIDER
 final suppliersProvider = FutureProvider<List<SupplierModel>>((ref) async {
-  print("PROVIDER START");
   return ref.read(apiServiceProvider).fetchSuppliers();
 });
 
+/// INVENTORY PROVIDER
 final inventoryProvider =
     StateNotifierProvider<InventoryNotifier, List<InventoryItemModel>>((ref) {
-      return InventoryNotifier(ref.read(dbServiceProvider));
+      final dbService = ref.read(dbServiceProvider);
+
+      return InventoryNotifier(dbService);
     });
 
+/// INVENTORY NOTIFIER
 class InventoryNotifier extends StateNotifier<List<InventoryItemModel>> {
-  final DBService dbService;
+  final DBService _dbService;
 
-  InventoryNotifier(this.dbService) : super([]) {
+  InventoryNotifier(this._dbService) : super([]) {
     loadItems();
   }
 
+  /// LOAD ITEMS
   Future<void> loadItems() async {
-    state = await dbService.getItems();
+    final items = await _dbService.getItems();
+
+    state = items;
   }
 
+  /// ADD ITEM
   Future<void> addItem(InventoryItemModel item) async {
-    await dbService.insertItem(item);
+    await _dbService.insertItem(item);
+
     await loadItems();
   }
 
+  /// UPDATE ITEM
   Future<void> updateItem(InventoryItemModel item) async {
-    await dbService.updateItem(item);
+    await _dbService.updateItem(item);
+
     await loadItems();
   }
 
+  /// DELETE ITEM
   Future<void> deleteItem(int id) async {
-    await dbService.deleteItem(id);
+    await _dbService.deleteItem(id);
+
     await loadItems();
   }
 }
