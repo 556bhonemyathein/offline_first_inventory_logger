@@ -277,7 +277,8 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
           const SizedBox(height: 10),
 
           Text(
-            "Reconnect internet and try again.",
+            "Reconnect internet and try again.Or use vpn if you have one.",
+
             textAlign: TextAlign.center,
             style: TextStyle(color: AppColors.grey.shade700),
           ),
