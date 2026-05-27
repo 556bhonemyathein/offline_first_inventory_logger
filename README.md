@@ -69,15 +69,16 @@ Riverpod was chosen because it provides:
 
 ## Folder Structure
 
+```text
 lib/
 ├── controller/
 ├── data/
-│ ├── repositories/
-│ └── services/
+│   ├── repositories/
+│   └── services/
 ├── model/
 ├── view/
-│ ├── screens/
-│ └── widgets/
+│   ├── screens/
+│   └── widgets/
 
 ---
 
