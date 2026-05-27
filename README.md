@@ -25,4 +25,5 @@
 
 ## Architecture
 - MVC-like clean structure
+- UI -> Provider -> Repository -> Service -> Database/API
 - Riverpod for state management
