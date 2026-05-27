@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../controller/providers/inventory_provider.dart';
 import '../../model/inventory_item_model.dart';
 import '../../model/supplier_model.dart';
+import '../widgets/custom/edit_item_dialog.dart';
 import '../widgets/custom/empty_inventory_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -57,7 +58,12 @@ class HomeScreen extends ConsumerWidget {
                       children: [
                         SlidableAction(
                           onPressed: (_) {
-                            _showEditDialog(context, ref, item);
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return EditItemDialog(item: item);
+                              },
+                            );
                           },
 
                           backgroundColor: Colors.blue,
@@ -638,196 +644,6 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// EDIT
-  void _showEditDialog(
-    BuildContext context,
-    WidgetRef ref,
-    InventoryItemModel item,
-  ) {
-    final formKey = GlobalKey<FormState>();
-
-    final nameController = TextEditingController(text: item.itemName);
-
-    final quantityController = TextEditingController(
-      text: item.quantity.toString(),
-    );
-
-    bool isUpdating = false;
-
-    showDialog(
-      context: context,
-
-      builder: (_) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-
-              title: const Text("Edit Inventory"),
-
-              content: Form(
-                key: formKey,
-
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-
-                  children: [
-                    TextFormField(
-                      controller: nameController,
-
-                      decoration: const InputDecoration(labelText: 'Item Name'),
-
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Required';
-                        }
-
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    TextFormField(
-                      controller: quantityController,
-
-                      keyboardType: TextInputType.number,
-
-                      decoration: const InputDecoration(labelText: 'Quantity'),
-
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Required';
-                        }
-
-                        if (int.tryParse(value) == null) {
-                          return 'Must be number';
-                        }
-
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-
-                  child: const Text("Cancel"),
-                ),
-
-                ElevatedButton(
-                  onPressed: isUpdating
-                      ? null
-                      : () async {
-                          if (!formKey.currentState!.validate()) {
-                            return;
-                          }
-
-                          setState(() {
-                            isUpdating = true;
-                          });
-
-                          try {
-                            final updatedItem = InventoryItemModel(
-                              id: item.id,
-
-                              itemName: nameController.text,
-
-                              supplier: item.supplier,
-
-                              quantity: int.parse(quantityController.text),
-
-                              dateAdded: item.dateAdded,
-                            );
-
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-
-                                  title: const Text("Update Item"),
-
-                                  content: const Text(
-                                    "Are you sure you want to update this item?",
-                                  ),
-
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, false);
-                                      },
-
-                                      child: const Text("Cancel"),
-                                    ),
-
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, true);
-                                      },
-
-                                      child: const Text("Update"),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-
-                            if (confirm != true) {
-                              setState(() {
-                                isUpdating = false;
-                              });
-
-                              return;
-                            }
-
-                            await ref
-                                .read(inventoryProvider.notifier)
-                                .updateItem(updatedItem);
-
-                            if (context.mounted) {
-                              Navigator.pop(context);
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Item Updated")),
-                              );
-                            }
-                          } finally {
-                            setState(() {
-                              isUpdating = false;
-                            });
-                          }
-                        },
-
-                  child: isUpdating
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text("Update"),
-                ),
-              ],
             );
           },
         );
