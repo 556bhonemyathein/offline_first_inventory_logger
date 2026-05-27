@@ -89,7 +89,7 @@ class HomeScreen extends ConsumerWidget {
                           );
                         },
                         loading: () => const CircularProgressIndicator(),
-                        error: (e, _) => const Text('Error loading suppliers'),
+                        error: (e, _) => Text(e.toString()),
                       ),
                       const SizedBox(height: 16),
                       TextField(

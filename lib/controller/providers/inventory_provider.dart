@@ -5,11 +5,12 @@ import '../../model/supplier_model.dart';
 import '../services/api_service.dart';
 import '../services/db_service.dart';
 
-final apiServiceProvider = Provider((ref) => ApiService());
+final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
 
-final dbServiceProvider = Provider((ref) => DBService());
+final dbServiceProvider = Provider<DBService>((ref) => DBService());
 
 final suppliersProvider = FutureProvider<List<SupplierModel>>((ref) async {
+  print("PROVIDER START");
   return ref.read(apiServiceProvider).fetchSuppliers();
 });
 
