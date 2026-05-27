@@ -77,14 +77,57 @@ class HomeScreen extends ConsumerWidget {
                       children: [
                         SlidableAction(
                           onPressed: (_) async {
-                            await ref
-                                .read(inventoryProvider.notifier)
-                                .deleteItem(item.id!);
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
 
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Item deleted")),
-                              );
+                                  title: const Text("Delete Item"),
+
+                                  content: Text(
+                                    "Are you sure you want to delete '${item.itemName}' ?",
+                                  ),
+
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, false);
+                                      },
+
+                                      child: const Text("Cancel"),
+                                    ),
+
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                      ),
+
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                      },
+
+                                      child: const Text("Delete"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirm == true) {
+                              await ref
+                                  .read(inventoryProvider.notifier)
+                                  .deleteItem(item.id!);
+
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Item deleted successfully"),
+                                  ),
+                                );
+                              }
                             }
                           },
 
@@ -749,6 +792,49 @@ class HomeScreen extends ConsumerWidget {
 
                               dateAdded: item.dateAdded,
                             );
+
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+
+                                  title: const Text("Update Item"),
+
+                                  content: const Text(
+                                    "Are you sure you want to update this item?",
+                                  ),
+
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, false);
+                                      },
+
+                                      child: const Text("Cancel"),
+                                    ),
+
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                      },
+
+                                      child: const Text("Update"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirm != true) {
+                              setState(() {
+                                isUpdating = false;
+                              });
+
+                              return;
+                            }
 
                             await ref
                                 .read(inventoryProvider.notifier)
