@@ -20,8 +20,8 @@
 
 ## Run Project
 
-flutter pub get
-flutter run
+- flutter pub get
+- flutter run
 
 ## Architecture
 - MVC-like clean structure
